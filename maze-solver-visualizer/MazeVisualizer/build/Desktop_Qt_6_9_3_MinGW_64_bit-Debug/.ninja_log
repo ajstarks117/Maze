@@ -1,0 +1,20 @@
+# ninja log v6
+4	446	7838828637157855	MazeVisualizer_autogen/timestamp	7a65555023b5be9f
+461	952	7838828637727745	CMakeFiles/MazeVisualizer.dir/backend/algorithms/Dijkstra.cpp.obj	900d4b747b0e0913
+466	994	7838828637727745	CMakeFiles/MazeVisualizer.dir/backend/algorithms/DoubleAStar.cpp.obj	df294a2a81d98dac
+4	446	7838828637157855	MazeVisualizer_autogen/mocs_compilation.cpp	7a65555023b5be9f
+4	446	7838828637157855	C:/Users/ASUS/Documents/GitHub/Maze/maze-solver-visualizer/MazeVisualizer/build/Desktop_Qt_6_9_3_MinGW_64_bit-Debug/MazeVisualizer_autogen/timestamp	7a65555023b5be9f
+459	675	7838828637727745	CMakeFiles/MazeVisualizer.dir/backend/core/Utility.cpp.obj	96eca3a363de02d4
+4	446	7838828637157855	C:/Users/ASUS/Documents/GitHub/Maze/maze-solver-visualizer/MazeVisualizer/build/Desktop_Qt_6_9_3_MinGW_64_bit-Debug/MazeVisualizer_autogen/mocs_compilation.cpp	7a65555023b5be9f
+464	934	7838828637727745	CMakeFiles/MazeVisualizer.dir/backend/algorithms/AStar.cpp.obj	434d368271d72214
+457	1013	7838828637657671	CMakeFiles/MazeVisualizer.dir/backend/core/Maze.cpp.obj	44dddee6a84fec92
+453	1898	7838828637657671	CMakeFiles/MazeVisualizer.dir/main.cpp.obj	c3cda57b6576a82f
+450	1964	7838828637657671	CMakeFiles/MazeVisualizer.dir/MazeVisualizer_autogen/mocs_compilation.cpp.obj	be85a5a4fd12c982
+455	1968	7838828637657671	CMakeFiles/MazeVisualizer.dir/mainwindow.cpp.obj	c1f95ae966a7609e
+24	476	7838837420930333	MazeVisualizer_autogen/timestamp	7a65555023b5be9f
+24	476	7838837420930333	MazeVisualizer_autogen/mocs_compilation.cpp	7a65555023b5be9f
+24	476	7838837420930333	C:/Users/ASUS/Documents/GitHub/Maze/maze-solver-visualizer/MazeVisualizer/build/Desktop_Qt_6_9_3_MinGW_64_bit-Debug/MazeVisualizer_autogen/timestamp	7a65555023b5be9f
+24	476	7838837420930333	C:/Users/ASUS/Documents/GitHub/Maze/maze-solver-visualizer/MazeVisualizer/build/Desktop_Qt_6_9_3_MinGW_64_bit-Debug/MazeVisualizer_autogen/mocs_compilation.cpp	7a65555023b5be9f
+483	514	7838837421561263	CMakeFiles/MazeVisualizer.dir/ui/MazeWidget.cpp.obj	96d5938c1f34b224
+479	1806	7838837421511253	CMakeFiles/MazeVisualizer.dir/main.cpp.obj	c3cda57b6576a82f
+477	1931	7838837421491254	CMakeFiles/MazeVisualizer.dir/MazeVisualizer_autogen/mocs_compilation.cpp.obj	be85a5a4fd12c982
