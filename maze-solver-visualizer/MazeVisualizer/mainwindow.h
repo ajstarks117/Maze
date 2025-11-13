@@ -1,45 +1,22 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "backend/core/Maze.h"
+#include "backend/algorithms/Dijkstra.h"
+#include "backend/algorithms/AStar.h"
+#include "backend/algorithms/DoubleAStar.h"
 
-#include <QMainWindow>
-#include <QPushButton>
-#include <QLabel>
-#include <QComboBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QSplitter>
-#include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QTimer>
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void runSelectedAlgorithm();
-    void generateNewMaze();
+#include "ui/MazeWidget.h"   // Your drawing widget
 
 private:
-    void setupUI();
-    void visualizeMaze();
-    void visualizePath();
+Maze *maze;
+MazeWidget *mazeWidget;
 
-    // --- UI Elements ---
-    QGraphicsView *mazeView;
-    QGraphicsScene *mazeScene;
+// UI widgets (connect these from Designer)
+QLineEdit *widthInput;
+QLineEdit *heightInput;
+QPushButton *generateBtn;
 
-    QLabel *statsLabel;
-    QComboBox *algoSelector;
-    QPushButton *runButton;
-    QPushButton *generateButton;
+QRadioButton *astarBtn;
+QRadioButton *dijkstraBtn;
+QRadioButton *biastarBtn;
 
-    // --- Helper ---
-    void showAlgorithmResult(const QString &name, int pathLen, int nodes, double timeMs);
-};
-
-#endif // MAINWINDOW_H
+QPushButton *startBtn;
+QPushButton *resetBtn;
