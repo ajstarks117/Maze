@@ -3,7 +3,7 @@
 #include "../core/AlgorithmResult.h"
 #include "../core/Types.h"
 
-class AStar {
+class JumpPointSearch {
 public:
     static AlgorithmResult solve(Maze& maze);
 };

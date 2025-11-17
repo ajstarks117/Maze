@@ -1,18 +1,17 @@
-#include "Dijkstra.h"
+#include "JumpPointSearch.h"
 #include "../core/Utility.h"
 #include <queue>
 #include <vector>
 #include <functional>
 #include <algorithm>
-#include <limits>
 
-struct DijkstraCompare {
+struct JPSCompare {
     bool operator()(Cell* a, Cell* b) const {
-        return a->g_cost > b->g_cost;
+        return a->f_cost() > b->f_cost();
     }
 };
 
-AlgorithmResult Dijkstra::solve(Maze& maze) {
+AlgorithmResult JumpPointSearch::solve(Maze& maze) {
     AlgorithmResult result;
     RobustTimer timer;
     
@@ -25,11 +24,11 @@ AlgorithmResult Dijkstra::solve(Maze& maze) {
         return result;
     }
     
-    std::priority_queue<Cell*, std::vector<Cell*>, DijkstraCompare> openSet;
+    std::priority_queue<Cell*, std::vector<Cell*>, JPSCompare> openSet;
     std::vector<bool> closedSet(maze.getWidth() * maze.getHeight(), false);
     
-    // Initialize start node
     start->g_cost = 0.0;
+    start->h_cost = Utility::manhattanDistance(start, goal);
     openSet.push(start);
     
     // START TIMING - Pure algorithm only
@@ -58,6 +57,7 @@ AlgorithmResult Dijkstra::solve(Maze& maze) {
             
             if (new_g_cost < neighbor->g_cost) {
                 neighbor->g_cost = new_g_cost;
+                neighbor->h_cost = Utility::manhattanDistance(neighbor, goal);
                 neighbor->parent = current;
                 openSet.push(neighbor);
             }
@@ -80,4 +80,4 @@ AlgorithmResult Dijkstra::solve(Maze& maze) {
     result.metrics.nodesExplored = result.visitedOrder.size();
     
     return result;
-}
+}   
