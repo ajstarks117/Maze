@@ -1,201 +1,214 @@
-🧩 Maze Solver - Interactive Pathfinding Visualizer
-https://img.shields.io/badge/C++-17-blue.svg
-https://img.shields.io/badge/Platform-Windows-lightgrey.svg
-https://img.shields.io/badge/License-MIT-green.svg
+<div align="center">
 
-A comprehensive C++17 terminal-based maze solver that implements and compares multiple pathfinding algorithms with real-time visualization and robust performance analysis.
+# 🧩 **Maze Solver – Interactive Pathfinding Visualizer**
 
-🎯 Features
-🧠 Multiple Pathfinding Algorithms
-Dijkstra's Algorithm - Uniform cost search
+![C++17](https://img.shields.io/badge/C++-17-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-A Search* - Heuristic-guided optimal pathfinding
+A powerful **C++17 terminal-based maze solver** featuring real-time visualization, multiple algorithms, performance analysis, and a clean interactive interface.
 
-Bidirectional A* - Simultaneous forward/backward search
+---
 
-Jump Point Search - Optimized A* for uniform-cost grids
+</div>
 
-🏗️ Maze Generation
-Recursive Backtracking - Perfect maze generation
+## 📚 **Table of Contents**
+1. [Overview](#-overview)
+2. [Features](#-features)
+3. [Quick Start](#-quick-start)
+4. [Project Structure](#-project-structure)
+5. [Usage Guide](#-usage-guide)
+6. [Performance Insights](#-performance-insights)
+7. [Technical Details](#-technical-details)
+8. [Educational Value](#-educational-value)
+9. [Contributing](#-contributing)
+10. [License](#-license)
+11. [Authors](#-authors)
+12. [Acknowledgments](#-acknowledgments)
 
-Customizable Sizes - 5x5 to 101x101 mazes
+---
 
-Guaranteed Solvability - Always generates solvable mazes
+## 🧭 **Overview**
+This project is a fully interactive **pathfinding visualizer** built in modern **C++17**, designed to compare the performance of famous graph search algorithms on grid-based mazes.
 
-📊 Advanced Analytics
-Real-time Performance Metrics - Execution time, nodes explored, path length
+It includes:
+- Professional code architecture  
+- Clean ASCII visualization  
+- Robust analytical tools  
+- Multiple algorithms + performance comparison  
 
-Robust Statistical Analysis - Multiple runs with standard deviation
+---
 
-Comparative Analysis - Side-by-side algorithm comparison
+## 🎯 **Features**
 
-Path Validation - Ensures solution correctness
+### 🧠 **Pathfinding Algorithms**
+- **Dijkstra’s Algorithm** – Uniform-cost search  
+- **A\*** – Heuristic-guided search  
+- **Bidirectional A\*** – Faster convergence  
+- **Jump Point Search (JPS)** – Optimized A\* for grid maps  
 
-🎮 Interactive Interface
-Menu-driven System - Easy navigation and control
+### 🏗️ **Maze Generation**
+- **Recursive Backtracking** (perfect mazes)  
+- Supports **5×5** to **101×101** maze sizes  
+- Always generates a **solvable** maze  
 
-Visual Path Display - ASCII visualization with path tracing
+### 📊 **Analytics Engine**
+- Execution time (microsecond precision)  
+- Nodes explored  
+- Path length  
+- Multi-run statistical analysis (std deviation)  
+- Algorithm comparison table  
 
-Live Performance Data - Microsecond-precision timing
+### 🎮 **Interactive Terminal UI**
+- Menu-driven system  
+- ASCII maze visualization  
+- Timeout protection  
+- Crash-safe execution  
 
-Error Handling - Timeout protection and crash recovery
+---
 
-🚀 Quick Start
-Prerequisites
-Windows 10/11 with Command Prompt
+## 🚀 **Quick Start**
 
-OR MSYS2 UCRT64 terminal
+### ✔️ **Prerequisites**
+- Windows 10/11  
+- CMD or MSYS2 UCRT64  
+- No external libraries needed  
 
-No additional installations required!
+---
 
-Running the Application
-Method 1: One-Click Execution
-cmd
-# Simply double-click or run:
+### ▶️ **Running the Executable**
+```cmd
 MazeSolver.exe
-Method 2: Compile from Source
-cmd
-# Compile the project
+▶️ Compile from Source
 g++ -std=c++17 -O2 -pthread -I. core\Maze.cpp core\Utility.cpp algorithms\*.cpp main.cpp -o MazeSolver.exe
-
-# Run the executable
 MazeSolver.exe
-📁 Project Structure
-text
+```
+---
+### 📁 Project Structure
+```cmd
 MazeSolver/
 ├── core/
-│   ├── Cell.h/cpp              # Maze cell representation
-│   ├── Maze.h/cpp              # Maze generation and management
-│   ├── Utility.h/cpp           # Timing and utility functions
-│   ├── Types.h                 # Common data structures
-│   └── AlgorithmResult.h       # Algorithm results container
+│   ├── Cell.h/.cpp              # Maze cell representation
+│   ├── Maze.h/.cpp              # Maze creation & handling
+│   ├── Utility.h/.cpp           # Timing utilities
+│   ├── Types.h                  # Shared structs
+│   └── AlgorithmResult.h        # Algorithm result container
 ├── algorithms/
-│   ├── Dijkstra.h/cpp          # Dijkstra's algorithm
-│   ├── AStar.h/cpp             # A* search algorithm
-│   ├── DoubleAStar.h/cpp       # Bidirectional A*
-│   └── JumpPointSearch.h/cpp   # Jump Point Search
-├── main.cpp                    # Interactive menu system
-├── MazeSolver.exe              # Compiled executable
-└── README.md                   # This file
-🎮 How to Use
-Launch the application: Run MazeSolver.exe
-
-Set maze size: Choose option 1 (recommended: 21x21 for testing)
-
-Generate maze: Choose option 2 to create a new maze
-
-Solve with algorithms: Options 3-6 for individual algorithms
-
-Compare performance: Option 7 for side-by-side comparison
-
-Robust analysis: Option 8 for statistical reliability testing
-
-Example Session
-text
+│   ├── Dijkstra.h/.cpp          # Dijkstra’s algorithm
+│   ├── AStar.h/.cpp             # A* search
+│   ├── DoubleAStar.h/.cpp       # Bidirectional A*
+│   └── JumpPointSearch.h/.cpp   # Jump Point Search
+├── main.cpp                     # Menu + app logic
+├── MazeSolver.exe               # Ready-to-run executable
+└── README.md                    # This file
+```
+---
+🎮 Usage Guide
+Steps:
+- Run the application
+- Set maze size – Option 1
+- Generate maze – Option 2
+- Run any algorithm – Options 3 to 6
+- Compare algorithms – Option 7
+- Run reliability analysis – Option 8
+```cmd
+Sample Session:
 1. Set maze size to 31x31
-2. Generate new maze  
-3. Solve with A* to see the optimal path
-7. Compare all algorithms to see performance differences
-8. Run robust analysis for reliable timing data
-📊 Performance Insights
-Algorithm Efficiency (Typical Results)
-Jump Point Search 🥇 - Fastest, optimized for grids
+2. Generate new maze
+3. Run A*
+7. Compare all algorithms
+8. Run robust multi-run analysis
+```
+---
+## Performance Insights
+### Algorithm Ranking (Typical)
+| Rank | Algorithm         | Reason                      |
+| ---- | ----------------- | --------------------------- |
+| 🥇 1 | Jump Point Search | Fastest due to pruning      |
+| 🥈 2 | A*                | Balanced speed + optimality |
+| 🥉 3 | Bidirectional A*  | Faster for large grids      |
+| 4    | Dijkstra          | Slow but consistent         |
 
-A* 🥈 - Excellent balance of speed and optimality
+---
 
-Bidirectional A* 🥉 - Good for complex mazes
+#### 📌 Sample Output
 
-Dijkstra - Reliable but slower, explores uniformly
-
-Sample Output
-text
 ===== A* =====
 Path Length: 73
 Nodes Explored: 75
 Time: 1.14 ms
 Success: Yes
 
-📊 PERFORMANCE COMPARISON
-Algorithm           Path Length  Nodes Explored  Time      Success
-Dijkstra            73           79              1.415 ms  Yes
-A*                  73           75              1.140 ms  Yes  
-Bidirectional A*    73           107             918 μs    Yes
-Jump Point Search   73           75              33 μs     Yes
-🔧 Technical Details
+#### 📌 Comparison Table
+
+Algorithm           Path Length  Nodes Explored  Time        Success
+Dijkstra            73           79              1.415 ms    Yes
+A*                  73           75              1.140 ms    Yes
+Bidirectional A*    73           107             918 µs      Yes
+Jump Point Search   73           75              33 µs       Yes
+
+
+### 🔧 Technical Details
 Built With
-C++17 - Modern C++ standards
+- C++17
+- STL (priority_queue, vector, chrono)
+- Multi-threaded timing
+- Zero external dependencies
+- Algorithmic Concepts
+- Recursive Backtracking
+- Manhattan-distance heuristic
+- Jump Point pruning
+- Bidirectional search space reduction
 
-STL Algorithms - Priority queues, vectors, chrono
+### Reliability Features
+- [x] Timeout protection
+- [x] Memory safety
+- [x] Path verification
+- [x] Statistical performance testing
+- [x] Clean error handling
 
-Multi-threading - Robust timing with timeout protection
+### 🎓 Educational Value
 
-Template-free Design - Simple, readable code
-
-Key Algorithms
-Recursive Backtracking - O(n) maze generation
-
-A Search* - O(b^d) with Manhattan heuristic
-
-Jump Point Search - O(b^d) with path compression
-
-Bidirectional Search - O(b^(d/2)) reduced search space
-
-Robust Features
-✅ Timeout Protection - Prevents infinite loops
-
-✅ Path Validation - Ensures solution correctness
-
-✅ Exception Handling - Graceful error recovery
-
-✅ Statistical Analysis - Reliable performance data
-
-✅ Memory Safety - Proper resource management
-
-🎓 Educational Value
-This project demonstrates:
-
-Graph Theory - Maze as connected graph
-
-Algorithm Analysis - Time/space complexity comparison
-
-Data Structures - Priority queues, stacks, vectors
-
-Software Engineering - Modular design, error handling
-
-Performance Optimization - Efficient algorithm implementation
+This project teaches:
+- Graph theory (maze as a graph)
+- Pathfinding algorithms
+- Time & space complexity
+- Clean C++ architecture
+- Benchmarking & analytics
+- Performance optimization
 
 🤝 Contributing
-Feel free to:
 
-Add new pathfinding algorithms
-
-Implement different maze generation techniques
-
-Enhance the visualization system
-
-Improve performance metrics
-
-Add unit tests
+You can contribute by:
+- Adding new algorithms
+- Adding more maze generators
+- Improving visualization
+- Enhancing analysis
+- Writing unit tests
 
 📜 License
-This project is open source and available under the MIT License.
+
+This project is licensed under the MIT License.
 
 👥 Authors
-Ajinkya Ubale - ajstarks117
 
-Ajaya Nandiyawar - Ajaya-Nandiyawar
-
-Rishi Agrawal - rishiagrawal02
-
-Abhijeet Ambat - IPPYON596
+- **Ajinkya Ubale** - [@ajstarks117](https://github.com/ajstarks117)
+- **Ajaya Nandiyawar** - [@Ajaya-Nandiyawar](https://github.com/Ajaya-Nandiyawar)
+- **Rishi Agrawal** - [@rishiagrawal02](https://github.com/rishiagrawal02)
+- **Abhijeet Ambat** - [@IPPYON596](https://github.com/IPPYON596)
 
 🙏 Acknowledgments
-Inspired by classical pathfinding algorithms
 
-Built for educational and research purposes
+Inspired by classic pathfinding literature
 
-Thanks to the C++ community for best practices
+Developed for research & education
 
-⭐ Star this repo if you found it helpful!
+Thanks to the C++ community for guidance
 
-Happy pathfinding! 🎮
+<div align="center">
+
+⭐ If you like this project, consider giving it a star!
+🎮 Happy Pathfinding!
+
+</div>
+
