@@ -3,12 +3,16 @@
 #include <string>
 #include <functional>
 #include "Types.h"  // Include the complete definitions
+#include "../algorithms/Dijkstra.h"
+#include "../algorithms/AStar.h"
+#include "../algorithms/DoubleAStar.h"
+#include "../algorithms/JumpPointSearch.h"
+#include "../core/Utility.h"
+#include "../core/Maze.h"
+#include "../core/Types.h"
 
 enum class MazeGenerator {
-    RecursiveBacktracker,
-    Prims,
-    Kruskals,
-    DFSRandomized
+    RecursiveBacktracker
 };
 
 enum class PathfindingAlgorithm {
@@ -96,34 +100,79 @@ inline AlgorithmResult BackendInterface::getResults() {
     return currentResults;
 }
 
-// Stub implementations (you'll replace these)
-inline void BackendInterface::startSolve(PathfindingAlgorithm algorithm, int speed) {
-    // Create dummy animation for testing
-    currentAnimationFrame = AnimationFrame();
-    auto mazeState = getCurrentMazeState();
-    
-    // Add some dummy visited cells for visualization
-    for (int i = 1; i < mazeState.width - 1 && i < mazeState.height - 1; i++) {
-        if (i < mazeState.cells.size()) {
-            currentAnimationFrame.visitedCells.push_back(&mazeState.cells[i]);
-        }
+inline void BackendInterface::startSolve(PathfindingAlgorithm algorithm, int speed)
+{
+    // Rebuild a fresh Maze from current GUI MazeState
+    int w = currentMazeState.width;
+    int h = currentMazeState.height;
+
+    Maze coreMaze(w, h);
+    auto& coreCells = coreMaze.getCells();
+
+    // Copy the GUI cells into core Maze cells
+    for (int i = 0; i < w * h; i++)
+    {
+        coreCells[i].wall = currentMazeState.cells[i].wall;
     }
-    
-    // Add dummy path
-    if (mazeState.startCell && mazeState.endCell) {
-        currentAnimationFrame.pathCells.push_back(mazeState.startCell);
-        currentAnimationFrame.pathCells.push_back(mazeState.endCell);
+
+    Cell* start = coreMaze.getStart();
+    Cell* goal  = coreMaze.getGoal();
+
+    std::vector<Cell*> visited;
+    std::vector<Cell*> frontier;
+    std::vector<Cell*> path;
+
+    // Animation callback (will be null until we patch solvers)
+    std::function<void(Cell*, Cell*)> callback = [&](Cell* v, Cell* f){
+        if (v) visited.push_back(v);
+        if (f) frontier.push_back(f);
+
+        AnimationFrame frame;
+        frame.visitedCells = visited;
+        frame.currentCells = frontier;
+        frame.pathCells = path;
+
+        if (onAnimationFrame)
+            onAnimationFrame(frame);
+    };
+
+    AlgorithmResult result;
+
+    switch (algorithm)
+    {
+        case PathfindingAlgorithm::Dijkstra:
+            result = Dijkstra::solve(coreMaze, callback);
+            break;
+
+        case PathfindingAlgorithm::AStar:
+            result = AStar::solve(coreMaze, callback);
+            break;
+
+        case PathfindingAlgorithm::BidirectionalAStar:
+            result = DoubleAStar::solve(coreMaze, callback);
+            break;
+
+        case PathfindingAlgorithm::JumpPointSearch:
+            result = JumpPointSearch::solve(coreMaze, callback);
+            break;
     }
-    
-    // Set dummy results
-    currentResults.success = true;
-    currentResults.pathLength = 10;
-    currentResults.nodesExplored = 50;
-    currentResults.timeTakenMs = 100;
-    
-    if (onAnimationFrame) onAnimationFrame(currentAnimationFrame);
-    if (onSolveComplete) onSolveComplete(currentResults);
+
+    // Final path
+    path = result.path;
+
+    AnimationFrame lastFrame;
+    lastFrame.visitedCells = visited;
+    lastFrame.currentCells = {};
+    lastFrame.pathCells = path;
+
+    if (onAnimationFrame)
+        onAnimationFrame(lastFrame);
+
+    if (onSolveComplete)
+        onSolveComplete(result);
 }
+
+
 
 inline void BackendInterface::reset() {
     currentAnimationFrame = AnimationFrame();

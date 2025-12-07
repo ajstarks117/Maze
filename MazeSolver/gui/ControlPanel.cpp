@@ -1,169 +1,247 @@
 #include "ControlPanel.h"
 #include <QLabel>
-#include <QFrame>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QGroupBox>
 
-ControlPanel::ControlPanel(QWidget* parent) : QWidget(parent) {
+ControlPanel::ControlPanel(QWidget* parent)
+    : QWidget(parent)
+{
+    setObjectName("controlPanel");
+
+    // Main vertical layout for all group boxes
     auto* mainLayout = new QVBoxLayout(this);
-    mainLayout->setSpacing(15);
-    
+    mainLayout->setContentsMargins(8, 8, 8, 8);
+    mainLayout->setSpacing(18);
+
+    // Setup UI sections
     setupMazeControls(mainLayout);
     setupAlgorithmControls(mainLayout);
     setupSimulationControls(mainLayout);
     setupResultsPanel(mainLayout);
-    mainLayout->addStretch(); // Push everything to top
-    
-    // Connect backend signals
+
+    mainLayout->addStretch(); // Push groups to top
+
+    // Backend → Results UI updates
     BackendInterface::onSolveComplete = [this](const AlgorithmResult& results) {
         updateResults(results);
     };
 }
 
-void ControlPanel::setupMazeControls(QVBoxLayout* mainLayout) {
+//
+// ========================
+//  Maze Setup Controls
+// ========================
+//
+void ControlPanel::setupMazeControls(QVBoxLayout* mainLayout)
+{
     auto* group = new QGroupBox("Maze Setup");
     auto* layout = new QVBoxLayout(group);
-    
+    layout->setSpacing(10);
+
+    // Size selection (width / height)
     auto* sizeLayout = new QHBoxLayout();
+    sizeLayout->setSpacing(10);
+
     widthSpin_ = new QSpinBox();
     widthSpin_->setRange(5, 101);
     widthSpin_->setValue(21);
+
     heightSpin_ = new QSpinBox();
     heightSpin_->setRange(5, 101);
     heightSpin_->setValue(21);
-    
+
     sizeLayout->addWidget(new QLabel("Width:"));
     sizeLayout->addWidget(widthSpin_);
     sizeLayout->addWidget(new QLabel("Height:"));
     sizeLayout->addWidget(heightSpin_);
-    
+
+    // Maze generator dropdown
     generatorCombo_ = new QComboBox();
     generatorCombo_->addItem("Recursive Backtracker");
     generatorCombo_->addItem("Prim's Algorithm");
     generatorCombo_->addItem("Kruskal's Algorithm");
     generatorCombo_->addItem("DFS Randomized");
-    
+
     generateButton_ = new QPushButton("Generate New Maze");
-    
+
     layout->addLayout(sizeLayout);
     layout->addWidget(new QLabel("Generator:"));
     layout->addWidget(generatorCombo_);
     layout->addWidget(generateButton_);
-    
-    connect(generateButton_, &QPushButton::clicked, this, &ControlPanel::onGenerateClicked);
-    
+
+    // Signal
+    connect(generateButton_, &QPushButton::clicked,
+            this, &ControlPanel::onGenerateClicked);
+
     mainLayout->addWidget(group);
 }
 
-void ControlPanel::setupAlgorithmControls(QVBoxLayout* mainLayout) {
+//
+// ========================
+//  Algorithm Selection
+// ========================
+//
+void ControlPanel::setupAlgorithmControls(QVBoxLayout* mainLayout)
+{
     auto* group = new QGroupBox("Pathfinding Algorithm");
     auto* layout = new QVBoxLayout(group);
-    
+    layout->setSpacing(6);
+
     algorithmGroup_ = new QButtonGroup(this);
-    
+
     dijkstraRadio_ = new QRadioButton("Dijkstra's Algorithm");
     astarRadio_ = new QRadioButton("A* Search");
     bidirectionalRadio_ = new QRadioButton("Bidirectional A*");
     jpsRadio_ = new QRadioButton("Jump Point Search");
-    
+
     algorithmGroup_->addButton(dijkstraRadio_, 0);
     algorithmGroup_->addButton(astarRadio_, 1);
     algorithmGroup_->addButton(bidirectionalRadio_, 2);
     algorithmGroup_->addButton(jpsRadio_, 3);
-    
-    astarRadio_->setChecked(true); // Default selection
-    
+
+    astarRadio_->setChecked(true); // Default
+
     layout->addWidget(dijkstraRadio_);
     layout->addWidget(astarRadio_);
     layout->addWidget(bidirectionalRadio_);
     layout->addWidget(jpsRadio_);
-    
+
     mainLayout->addWidget(group);
 }
 
-void ControlPanel::setupSimulationControls(QVBoxLayout* mainLayout) {
+//
+// ========================
+//  Simulation Controls
+// ========================
+//
+void ControlPanel::setupSimulationControls(QVBoxLayout* mainLayout)
+{
     auto* group = new QGroupBox("Simulation Controls");
     auto* layout = new QVBoxLayout(group);
-    
+    layout->setSpacing(10);
+
     solveButton_ = new QPushButton("Start Solve");
     resetButton_ = new QPushButton("Reset");
+    resetButton_->setObjectName("resetButton"); // QSS: Gray button
     stepButton_ = new QPushButton("Step Forward");
-    
+
+    auto* buttonRow = new QHBoxLayout();
+    buttonRow->setSpacing(10);
+    buttonRow->addWidget(solveButton_);
+    buttonRow->addWidget(resetButton_);
+
+    // Speed slider
     auto* speedLayout = new QHBoxLayout();
+    speedLayout->setSpacing(8);
     speedLayout->addWidget(new QLabel("Speed:"));
+
     speedSlider_ = new QSlider(Qt::Horizontal);
     speedSlider_->setRange(1, 10);
     speedSlider_->setValue(5);
+
     speedLayout->addWidget(speedSlider_);
-    
-    layout->addWidget(solveButton_);
-    layout->addWidget(resetButton_);
+
+    layout->addLayout(buttonRow);
     layout->addWidget(stepButton_);
     layout->addLayout(speedLayout);
-    
-    connect(solveButton_, &QPushButton::clicked, this, &ControlPanel::onSolveClicked);
-    connect(resetButton_, &QPushButton::clicked, this, &ControlPanel::onResetClicked);
-    connect(stepButton_, &QPushButton::clicked, this, &ControlPanel::onStepClicked);
-    connect(speedSlider_, &QSlider::valueChanged, this, &ControlPanel::onSpeedChanged);
-    
+
+    // Signals
+    connect(solveButton_, &QPushButton::clicked,
+            this, &ControlPanel::onSolveClicked);
+
+    connect(resetButton_, &QPushButton::clicked,
+            this, &ControlPanel::onResetClicked);
+
+    connect(stepButton_, &QPushButton::clicked,
+            this, &ControlPanel::onStepClicked);
+
+    connect(speedSlider_, &QSlider::valueChanged,
+            this, &ControlPanel::onSpeedChanged);
+
     mainLayout->addWidget(group);
 }
 
-void ControlPanel::setupResultsPanel(QVBoxLayout* mainLayout) {
+//
+// ========================
+//  Results Panel
+// ========================
+//
+void ControlPanel::setupResultsPanel(QVBoxLayout* mainLayout)
+{
     auto* group = new QGroupBox("Results");
     auto* layout = new QVBoxLayout(group);
-    
+    layout->setSpacing(6);
+
     statusLabel_ = new QLabel("Status: Ready");
     pathLengthLabel_ = new QLabel("Path Length: --");
     nodesExploredLabel_ = new QLabel("Nodes Explored: --");
     timeTakenLabel_ = new QLabel("Time Taken: --");
-    
+
     layout->addWidget(statusLabel_);
     layout->addWidget(pathLengthLabel_);
     layout->addWidget(nodesExploredLabel_);
     layout->addWidget(timeTakenLabel_);
-    
+
     mainLayout->addWidget(group);
 }
 
-void ControlPanel::onGenerateClicked() {
+//
+// ========================
+//  Slots Implementation
+// ========================
+//
+
+void ControlPanel::onGenerateClicked()
+{
     int width = widthSpin_->value();
     int height = heightSpin_->value();
-    MazeGenerator generator = static_cast<MazeGenerator>(generatorCombo_->currentIndex());
-    
-    BackendInterface::generateMaze(width, height, generator);
+    MazeGenerator gen = static_cast<MazeGenerator>(generatorCombo_->currentIndex());
+
+    BackendInterface::generateMaze(width, height, gen);
+
     emit mazeGenerated();
     statusLabel_->setText("Status: Maze Generated");
 }
 
-void ControlPanel::onSolveClicked() {
-    int algorithmId = algorithmGroup_->checkedId();
+void ControlPanel::onSolveClicked()
+{
+    PathfindingAlgorithm algorithm =
+        static_cast<PathfindingAlgorithm>(algorithmGroup_->checkedId());
+
     int speed = speedSlider_->value();
-    
-    PathfindingAlgorithm algorithm = static_cast<PathfindingAlgorithm>(algorithmId);
+
     BackendInterface::startSolve(algorithm, speed);
+
     emit solveStarted();
     statusLabel_->setText("Status: Solving...");
 }
 
-void ControlPanel::onResetClicked() {
+void ControlPanel::onResetClicked()
+{
     BackendInterface::reset();
     emit resetRequested();
+
     statusLabel_->setText("Status: Reset");
+
+    // Clear results
     updateResults(AlgorithmResult());
 }
 
-void ControlPanel::onStepClicked() {
+void ControlPanel::onStepClicked()
+{
     BackendInterface::step();
     emit stepRequested();
 }
 
-void ControlPanel::onSpeedChanged(int value) {
-    // Speed change can be handled in real-time if needed
+void ControlPanel::onSpeedChanged(int value)
+{
     Q_UNUSED(value);
+    // Can be used if real-time speed adjustments are required
 }
 
-void ControlPanel::updateResults(const AlgorithmResult& results) {
+void ControlPanel::updateResults(const AlgorithmResult& results)
+{
     if (results.success) {
         statusLabel_->setText("Status: Solved");
         pathLengthLabel_->setText(QString("Path Length: %1").arg(results.pathLength));

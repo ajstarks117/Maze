@@ -122,3 +122,11 @@ They can run it immediately without any installations!
 **Enjoy exploring pathfinding algorithms!** 🎮
 
 *Project by GROUP-10 - C++17 Maze Solver*
+
+
+cd C:\Users\ASUS\Documents\GitHub\Maze\MazeSolver
+rmdir /s /q build_gui
+mkdir build_gui
+cd build_gui
+cmake -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="C:/Qt/6.9.3/mingw_64" ..
+mingw32-make

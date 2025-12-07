@@ -11,7 +11,7 @@ struct DoubleAStarCompare {
     }
 };
 
-AlgorithmResult DoubleAStar::solve(Maze& maze) {
+AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepCallback){
     AlgorithmResult result;
     RobustTimer timer;
     

@@ -12,7 +12,7 @@ struct AStarCompare {
     }
 };
 
-AlgorithmResult AStar::solve(Maze& maze) {
+AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepCallback){
     AlgorithmResult result;
     RobustTimer timer;
     

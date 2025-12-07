@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QMainWindow>
 #include <QSplitter>
 #include "MazeWidget.h"
@@ -13,8 +14,9 @@ public:
 private:
     void setupUI();
     void setupConnections();
-    
-    QSplitter* splitter_;
-    MazeWidget* mazeWidget_;
-    ControlPanel* controlPanel_;
+
+    QSplitter* splitter_;      // Split view (Maze | Controls)
+    MazeWidget* mazeWidget_;   // Left side (maze visualizer)
+    ControlPanel* controlPanel_; // Right side (controls)
 };
+

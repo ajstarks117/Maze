@@ -12,7 +12,7 @@ struct DijkstraCompare {
     }
 };
 
-AlgorithmResult Dijkstra::solve(Maze& maze) {
+AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepCallback){
     AlgorithmResult result;
     RobustTimer timer;
     

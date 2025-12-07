@@ -11,7 +11,7 @@ struct JPSCompare {
     }
 };
 
-AlgorithmResult JumpPointSearch::solve(Maze& maze) {
+AlgorithmResult JumpPointSearch::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepCallback){
     AlgorithmResult result;
     RobustTimer timer;
     
