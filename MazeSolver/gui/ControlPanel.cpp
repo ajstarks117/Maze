@@ -23,7 +23,7 @@ ControlPanel::ControlPanel(QWidget* parent)
     mainLayout->addStretch(); // Push groups to top
 
     // Backend → Results UI updates
-    BackendInterface::onSolveComplete = [this](const AlgorithmResult& results) {
+    BackendInterface::get().onSolveComplete = [this](const AlgorithmResult& results) {
         updateResults(results);
     };
 }
@@ -192,45 +192,40 @@ void ControlPanel::setupResultsPanel(QVBoxLayout* mainLayout)
 // ========================
 //
 
-void ControlPanel::onGenerateClicked()
-{
+void ControlPanel::onGenerateClicked() {
     int width = widthSpin_->value();
     int height = heightSpin_->value();
     MazeGenerator gen = static_cast<MazeGenerator>(generatorCombo_->currentIndex());
 
-    BackendInterface::generateMaze(width, height, gen);
+    // [FIX] Use Singleton
+    BackendInterface::get().generateMaze(width, height, gen);
 
     emit mazeGenerated();
     statusLabel_->setText("Status: Maze Generated");
 }
 
-void ControlPanel::onSolveClicked()
-{
-    PathfindingAlgorithm algorithm =
-        static_cast<PathfindingAlgorithm>(algorithmGroup_->checkedId());
-
+void ControlPanel::onSolveClicked() {
+    PathfindingAlgorithm algorithm = static_cast<PathfindingAlgorithm>(algorithmGroup_->checkedId());
     int speed = speedSlider_->value();
 
-    BackendInterface::startSolve(algorithm, speed);
+    // [FIX] Use Singleton
+    BackendInterface::get().startSolve(algorithm, speed);
 
     emit solveStarted();
     statusLabel_->setText("Status: Solving...");
 }
 
-void ControlPanel::onResetClicked()
-{
-    BackendInterface::reset();
+void ControlPanel::onResetClicked() {
+    // [FIX] Use Singleton
+    BackendInterface::get().reset();
     emit resetRequested();
-
     statusLabel_->setText("Status: Reset");
-
-    // Clear results
     updateResults(AlgorithmResult());
 }
 
 void ControlPanel::onStepClicked()
 {
-    BackendInterface::step();
+    BackendInterface::get().step();
     emit stepRequested();
 }
 

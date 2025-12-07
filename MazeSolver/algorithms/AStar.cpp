@@ -20,9 +20,7 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
     Cell* start = maze.getStart();
     Cell* goal = maze.getGoal();
     
-    if (!start || !goal) {
-        return result;
-    }
+    if (!start || !goal) return result;
     
     std::priority_queue<Cell*, std::vector<Cell*>, AStarCompare> openSet;
     std::vector<bool> closedSet(maze.getWidth() * maze.getHeight(), false);
@@ -31,7 +29,9 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
     start->h_cost = Utility::manhattanDistance(start, goal);
     openSet.push(start);
     
-    timer.start(2000); 
+    // [FIX] Increase timeout for GUI
+    long long timeout = stepCallback ? 300000 : 2000;
+    timer.start(timeout); 
     
     while (!openSet.empty() && !timer.isTimeout()) {
         Cell* current = openSet.top();
@@ -43,10 +43,7 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
         closedSet[currentIndex] = true;
         result.visitedOrder.push_back(current);
 
-        // [ANIMATION FIX]: Visit node
-        if (stepCallback) {
-            stepCallback(current, nullptr);
-        }
+        if (stepCallback) stepCallback(current, nullptr);
         
         if (current == goal) {
             result.success = true;
@@ -65,26 +62,18 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
                 neighbor->parent = current;
                 openSet.push(neighbor);
 
-                // [ANIMATION FIX]: Add to frontier
-                if (stepCallback) {
-                    stepCallback(nullptr, neighbor);
-                }
+                if (stepCallback) stepCallback(nullptr, neighbor);
             }
         }
     }
     
     result.metrics.timeTakenMs = timer.stop();
-    
-    if (timer.isTimeout()) {
-        result.success = false;
-    }
+    if (timer.isTimeout()) result.success = false;
     
     if (result.success) {
         result.path = Utility::reconstructPath(maze.getGoal());
         result.metrics.pathLength = result.path.size();
     }
-    
     result.metrics.nodesExplored = result.visitedOrder.size();
-    
     return result;
 }

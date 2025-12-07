@@ -1,0 +1,110 @@
+[
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe    -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolver.dir\\main.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\main.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/main.cpp",
+  "output": "CMakeFiles/MazeSolver.dir/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe    -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolver.dir\\core\\Maze.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\core\\Maze.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/core/Maze.cpp",
+  "output": "CMakeFiles/MazeSolver.dir/core/Maze.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe    -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolver.dir\\core\\Utility.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\core\\Utility.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/core/Utility.cpp",
+  "output": "CMakeFiles/MazeSolver.dir/core/Utility.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe    -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolver.dir\\algorithms\\Dijkstra.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\Dijkstra.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/Dijkstra.cpp",
+  "output": "CMakeFiles/MazeSolver.dir/algorithms/Dijkstra.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe    -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolver.dir\\algorithms\\AStar.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\AStar.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/AStar.cpp",
+  "output": "CMakeFiles/MazeSolver.dir/algorithms/AStar.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe    -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolver.dir\\algorithms\\DoubleAStar.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\DoubleAStar.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/DoubleAStar.cpp",
+  "output": "CMakeFiles/MazeSolver.dir/algorithms/DoubleAStar.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe    -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolver.dir\\algorithms\\JumpPointSearch.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\JumpPointSearch.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/JumpPointSearch.cpp",
+  "output": "CMakeFiles/MazeSolver.dir/algorithms/JumpPointSearch.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\MazeSolverGUI_autogen\\mocs_compilation.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\build_gui\\MazeSolverGUI_autogen\\mocs_compilation.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui/MazeSolverGUI_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/MazeSolverGUI_autogen/mocs_compilation.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\gui\\main_gui.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\gui\\main_gui.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/gui/main_gui.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/gui/main_gui.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\gui\\MainWindow.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\gui\\MainWindow.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/gui/MainWindow.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/gui/MainWindow.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\gui\\MazeWidget.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\gui\\MazeWidget.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/gui/MazeWidget.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/gui/MazeWidget.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\gui\\ControlPanel.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\gui\\ControlPanel.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/gui/ControlPanel.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/gui/ControlPanel.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\core\\Maze.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\core\\Maze.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/core/Maze.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/core/Maze.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\core\\Utility.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\core\\Utility.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/core/Utility.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/core/Utility.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\algorithms\\Dijkstra.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\Dijkstra.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/Dijkstra.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/algorithms/Dijkstra.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\algorithms\\AStar.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\AStar.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/AStar.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/algorithms/AStar.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\algorithms\\DoubleAStar.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\DoubleAStar.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/DoubleAStar.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/algorithms/DoubleAStar.cpp.obj"
+},
+{
+  "directory": "C:/Users/ASUS/Documents/GitHub/Maze/build_gui",
+  "command": "C:\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 @CMakeFiles/MazeSolverGUI.dir/includes_CXX.rsp  -std=c++17 -g -std=gnu++17 -Wall -Wextra -O2 -o CMakeFiles\\MazeSolverGUI.dir\\algorithms\\JumpPointSearch.cpp.obj -c C:\\Users\\ASUS\\Documents\\GitHub\\Maze\\MazeSolver\\algorithms\\JumpPointSearch.cpp",
+  "file": "C:/Users/ASUS/Documents/GitHub/Maze/MazeSolver/algorithms/JumpPointSearch.cpp",
+  "output": "CMakeFiles/MazeSolverGUI.dir/algorithms/JumpPointSearch.cpp.obj"
+}
+]

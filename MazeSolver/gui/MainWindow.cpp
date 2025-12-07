@@ -63,22 +63,15 @@ void MainWindow::setupUI() {
 }
 
 void MainWindow::setupConnections() {
+    connect(controlPanel_, &ControlPanel::mazeGenerated, mazeWidget_, &MazeWidget::resetView);
+    connect(controlPanel_, &ControlPanel::resetRequested, mazeWidget_, &MazeWidget::resetView);
 
-    // Reset maze view when new maze is generated
-    connect(controlPanel_, &ControlPanel::mazeGenerated,
-            mazeWidget_, &MazeWidget::resetView);
-
-    // Reset view when reset is clicked
-    connect(controlPanel_, &ControlPanel::resetRequested,
-            mazeWidget_, &MazeWidget::resetView);
-
-    // Backend animation frame updates → maze visually animates
-    BackendInterface::onAnimationFrame = [this](const AnimationFrame& frame) {
+    // [FIX] Use Singleton for signals
+    BackendInterface::get().onAnimationFrame = [this](const AnimationFrame& frame) {
         mazeWidget_->updateAnimationFrame(frame);
     };
 
-    // When maze is generated, reset visuals
-    BackendInterface::onMazeGenerated = [this]() {
+    BackendInterface::get().onMazeGenerated = [this]() {
         mazeWidget_->resetView();
     };
 }

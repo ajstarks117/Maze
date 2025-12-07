@@ -10,10 +10,10 @@ private:
     
     void initializeMaze();
     void generateRecursiveBacktracking();
-    Cell* getCellPtr(int x, int y);
     
-public:
+    public:
     Maze(int width = 51, int height = 51);
+    Cell* getCellPtr(int x, int y);
     
     void generate();
     void reset();

@@ -19,9 +19,7 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
     Cell* start = maze.getStart();
     Cell* goal = maze.getGoal();
     
-    if (!start || !goal) {
-        return result;
-    }
+    if (!start || !goal) return result;
     
     std::priority_queue<Cell*, std::vector<Cell*>, DoubleAStarCompare> openForward;
     std::priority_queue<Cell*, std::vector<Cell*>, DoubleAStarCompare> openBackward;
@@ -44,10 +42,11 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
     
     Cell* meetingPoint = nullptr;
     
-    timer.start(2000); 
+    // [FIX] Increase timeout for GUI
+    long long timeout = stepCallback ? 300000 : 2000;
+    timer.start(timeout); 
     
     while ((!openForward.empty() || !openBackward.empty()) && !timer.isTimeout()) {
-        // Expand forward
         if (!openForward.empty()) {
             Cell* current = openForward.top();
             openForward.pop();
@@ -58,7 +57,6 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
             closedForward[idx] = true;
             result.visitedOrder.push_back(current);
 
-            // [ANIMATION FIX] Forward visit
             if (stepCallback) stepCallback(current, nullptr);
             
             if (closedBackward[idx]) {
@@ -78,14 +76,11 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
                     neighbor->parent = current;
                     cameFromForward[nidx] = current;
                     openForward.push(neighbor);
-
-                    // [ANIMATION FIX] Forward frontier
                     if (stepCallback) stepCallback(nullptr, neighbor);
                 }
             }
         }
         
-        // Expand backward
         if (!openBackward.empty() && !result.success) {
             Cell* current = openBackward.top();
             openBackward.pop();
@@ -96,7 +91,6 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
             closedBackward[idx] = true;
             result.visitedOrder.push_back(current);
 
-            // [ANIMATION FIX] Backward visit
             if (stepCallback) stepCallback(current, nullptr);
             
             if (closedForward[idx]) {
@@ -116,8 +110,6 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
                     neighbor->parent = current;
                     cameFromBackward[nidx] = current;
                     openBackward.push(neighbor);
-
-                    // [ANIMATION FIX] Backward frontier
                     if (stepCallback) stepCallback(nullptr, neighbor);
                 }
             }
@@ -125,14 +117,10 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
     }
     
     result.metrics.timeTakenMs = timer.stop();
-    
-    if (timer.isTimeout()) {
-        result.success = false;
-    }
+    if (timer.isTimeout()) result.success = false;
     
     if (result.success && meetingPoint) {
         std::vector<Cell*> path;
-        
         Cell* current = meetingPoint;
         while (current != start) {
             path.push_back(current);
@@ -146,15 +134,11 @@ AlgorithmResult DoubleAStar::solve(Maze& maze, std::function<void(Cell*, Cell*)>
             path.push_back(current);
             current = cameFromBackward[current->y * maze.getWidth() + current->x];
         }
-        if (!path.empty() && path.back() != goal) {
-            path.push_back(goal);
-        }
+        if (!path.empty() && path.back() != goal) path.push_back(goal);
         
         result.path = path;
         result.metrics.pathLength = result.path.size();
     }
-    
     result.metrics.nodesExplored = result.visitedOrder.size();
-    
     return result;
 }

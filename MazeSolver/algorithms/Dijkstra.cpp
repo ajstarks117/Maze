@@ -16,23 +16,22 @@ AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> st
     AlgorithmResult result;
     RobustTimer timer;
     
-    // Setup
     maze.reset();
     Cell* start = maze.getStart();
     Cell* goal = maze.getGoal();
     
-    if (!start || !goal) {
-        return result;
-    }
+    if (!start || !goal) return result;
     
     std::priority_queue<Cell*, std::vector<Cell*>, DijkstraCompare> openSet;
     std::vector<bool> closedSet(maze.getWidth() * maze.getHeight(), false);
     
-    // Initialize start node
     start->g_cost = 0.0;
     openSet.push(start);
     
-    timer.start(2000); 
+    // [FIX] If animating (stepCallback exists), increase timeout to 5 minutes (300000ms)
+    // Otherwise keep 2 seconds for terminal benchmarks.
+    long long timeout = stepCallback ? 300000 : 2000;
+    timer.start(timeout); 
     
     while (!openSet.empty() && !timer.isTimeout()) {
         Cell* current = openSet.top();
@@ -44,10 +43,7 @@ AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> st
         closedSet[currentIndex] = true;
         result.visitedOrder.push_back(current);
         
-        // [ANIMATION FIX]: Tell UI we are visiting this node
-        if (stepCallback) {
-            stepCallback(current, nullptr);
-        }
+        if (stepCallback) stepCallback(current, nullptr);
         
         if (current == goal) {
             result.success = true;
@@ -65,26 +61,18 @@ AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> st
                 neighbor->parent = current;
                 openSet.push(neighbor);
 
-                // [ANIMATION FIX]: Tell UI we found a neighbor (frontier)
-                if (stepCallback) {
-                    stepCallback(nullptr, neighbor);
-                }
+                if (stepCallback) stepCallback(nullptr, neighbor);
             }
         }
     }
     
     result.metrics.timeTakenMs = timer.stop();
-    
-    if (timer.isTimeout()) {
-        result.success = false;
-    }
+    if (timer.isTimeout()) result.success = false;
     
     if (result.success) {
         result.path = Utility::reconstructPath(maze.getGoal());
         result.metrics.pathLength = result.path.size();
     }
-    
     result.metrics.nodesExplored = result.visitedOrder.size();
-    
     return result;
 }

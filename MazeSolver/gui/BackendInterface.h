@@ -14,7 +14,7 @@
 #include "../algorithms/DoubleAStar.h"
 #include "../algorithms/JumpPointSearch.h"
 
-enum class MazeGenerator { RecursiveBacktracker, Prims, Kruskals };
+enum class MazeGenerator { RecursiveBacktracker };
 enum class PathfindingAlgorithm { Dijkstra, AStar, BidirectionalAStar, JumpPointSearch };
 
 struct AnimationFrame {
@@ -23,51 +23,64 @@ struct AnimationFrame {
     std::vector<Cell*> pathCells;
 };
 
+// [SINGLETON FIX] This class guarantees only ONE maze exists
 class BackendInterface {
 private:
-    // [FIX] 'inline static' ensures there is exactly ONE maze shared by the whole app.
-    // No extra .cpp file needed.
-    inline static Maze* globalMaze = nullptr;
+    Maze* globalMaze = nullptr;
+
+    // Private Constructor
+    BackendInterface() {
+        globalMaze = new Maze(21, 21); // Default maze on startup
+    }
 
 public:
-    static inline std::function<void()> onMazeGenerated;
-    static inline std::function<void(const AnimationFrame&)> onAnimationFrame;
-    static inline std::function<void(const AlgorithmResult&)> onSolveComplete;
+    // Delete copy constructors to prevent duplicates
+    BackendInterface(const BackendInterface&) = delete;
+    void operator=(const BackendInterface&) = delete;
 
-    static void generateMaze(int width, int height, MazeGenerator type) {
-        (void)type; 
+    // Access the single shared instance
+    static BackendInterface& get() {
+        static BackendInterface instance;
+        return instance;
+    }
+
+    // Signals
+    std::function<void()> onMazeGenerated;
+    std::function<void(const AnimationFrame&)> onAnimationFrame;
+    std::function<void(const AlgorithmResult&)> onSolveComplete;
+
+    void generateMaze(int width, int height, MazeGenerator type) {
+        (void)type;
         if (globalMaze) delete globalMaze;
-        
-        // Create the maze. This triggers the generation logic.
-        globalMaze = new Maze(width, height);
-        
+        globalMaze = new Maze(width, height); // This generates the maze
         if (onMazeGenerated) onMazeGenerated();
     }
 
-    static MazeState getCurrentMazeState() {
+    MazeState getCurrentMazeState() {
         if (!globalMaze) return MazeState(21, 21);
 
         MazeState state(globalMaze->getWidth(), globalMaze->getHeight());
         auto& coreCells = globalMaze->getCells();
         state.cells.clear();
-        state.cells.reserve(coreCells.size());
-
+        
+        // Convert Core Cells to GUI Cells
         for (const auto& c : coreCells) {
+            // IMPORTANT: Copy the 'wall' and 'visited' status correctly
             Cell guiCell(c.x, c.y, c.wall);
             guiCell.visited = c.visited;
             state.cells.push_back(guiCell);
         }
 
-        Cell* start = globalMaze->getStart();
-        Cell* end = globalMaze->getGoal();
+        if (globalMaze->getStart()) 
+            state.startCell = &state.cells[globalMaze->getStart()->y * state.width + globalMaze->getStart()->x];
         
-        if (start) state.startCell = &state.cells[start->y * state.width + start->x];
-        if (end) state.endCell = &state.cells[end->y * state.width + end->x];
+        if (globalMaze->getGoal()) 
+            state.endCell = &state.cells[globalMaze->getGoal()->y * state.width + globalMaze->getGoal()->x];
 
         return state;
     }
 
-    static void startSolve(PathfindingAlgorithm algorithm, int speed) {
+    void startSolve(PathfindingAlgorithm algorithm, int speed) {
         if (!globalMaze) return;
         globalMaze->reset(); 
 
@@ -78,10 +91,9 @@ public:
             if (v) visited.push_back(v);
             if (f) frontier.push_back(f);
 
-            if (speed < 10) { 
-                // Simple delay for animation
-                int delay = (11 - speed) * 5; 
-                QThread::msleep(delay); 
+            if (speed < 10) {
+                unsigned long delay = (11 - speed) * 5; 
+                QThread::msleep(delay);
             }
 
             AnimationFrame frame;
@@ -108,10 +120,10 @@ public:
         if (onSolveComplete) onSolveComplete(result);
     }
 
-    static void reset() {
+    void reset() {
         if (globalMaze) globalMaze->reset();
-        if (onMazeGenerated) onMazeGenerated(); 
+        if (onMazeGenerated) onMazeGenerated();
     }
 
-    static void step() {} 
+    void step() {} // Placeholder
 };

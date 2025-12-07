@@ -1,13 +1,12 @@
 #include "Maze.h"
 #include <iostream>
 #include <stack>
-#include <cstdlib> // rand
-#include <ctime>   // time
+#include <random>
 #include <algorithm>
+#include <chrono> 
 #include <limits>
 
 Maze::Maze(int width, int height) : width(width), height(height) {
-    // Ensure odd dimensions
     if (width % 2 == 0) this->width++;
     if (height % 2 == 0) this->height++;
     
@@ -17,19 +16,17 @@ Maze::Maze(int width, int height) : width(width), height(height) {
 }
 
 void Maze::initializeMaze() {
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            int index = y * width + x;
-            // All cells start as walls (Black)
-            cells[index] = Cell(x, y, true); 
-        }
+    for (int i = 0; i < width * height; ++i) {
+        // x and y can be calculated from index
+        int y = i / width;
+        int x = i % width;
+        cells[i] = Cell(x, y, true); // Set as WALL (true)
     }
 }
 
 void Maze::generate() {
     generateRecursiveBacktracking();
-    
-    // SAFETY: Force Start and End to be open (White)
+    // Force Start/End open
     if (getStart()) { getStart()->wall = false; getStart()->visited = false; }
     if (getGoal()) { getGoal()->wall = false; getGoal()->visited = false; }
 }
@@ -38,10 +35,10 @@ void Maze::generateRecursiveBacktracking() {
     reset();
     std::stack<Cell*> stack;
     
-    // [FIX] Simple, crash-proof seeding
-    std::srand(static_cast<unsigned>(std::time(0)));
+    // Crash-proof seed
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937 gen(seed);
     
-    // Start at (1,1)
     Cell* start = getCellPtr(1, 1);
     if (!start) return;
     
@@ -54,51 +51,38 @@ void Maze::generateRecursiveBacktracking() {
     
     while (!stack.empty()) {
         Cell* current = stack.top();
+        std::vector<int> dirs = {0, 1, 2, 3};
+        std::shuffle(dirs.begin(), dirs.end(), gen);
         
-        // [FIX] Simple manual shuffle logic to replace std::shuffle
-        int directions[] = {0, 1, 2, 3};
-        for (int i = 0; i < 4; ++i) {
-            int r = std::rand() % 4;
-            std::swap(directions[i], directions[r]);
-        }
-        
-        bool foundUnvisited = false;
-        
-        for (int i = 0; i < 4; ++i) {
-            int dir = directions[i];
-            int newX = current->x + dx[dir];
-            int newY = current->y + dy[dir];
+        bool carved = false;
+        for (int dir : dirs) {
+            int nx = current->x + dx[dir];
+            int ny = current->y + dy[dir];
             
-            if (newX > 0 && newX < width - 1 && newY > 0 && newY < height - 1) {
-                Cell* neighbor = getCellPtr(newX, newY);
-                // If it's a wall, we can carve into it
-                if (neighbor && neighbor->wall) { 
-                    int wallX = current->x + dx[dir] / 2;
-                    int wallY = current->y + dy[dir] / 2;
-                    Cell* wall = getCellPtr(wallX, wallY);
-                    
-                    if (wall) wall->wall = false; // Break the wall
-                    
-                    neighbor->wall = false;
-                    neighbor->visited = true;
-                    stack.push(neighbor);
-                    foundUnvisited = true;
-                    break;
-                }
+            Cell* neighbor = getCellPtr(nx, ny);
+            if (neighbor && neighbor->wall) { // If it's a wall, it's valid to carve
+                // Carve the wall in between
+                Cell* wall = getCellPtr(current->x + dx[dir]/2, current->y + dy[dir]/2);
+                if (wall) wall->wall = false;
+                
+                neighbor->wall = false;
+                neighbor->visited = true;
+                stack.push(neighbor);
+                carved = true;
+                break;
             }
         }
-        
-        if (!foundUnvisited) stack.pop();
+        if (!carved) stack.pop();
     }
-    reset(); // Clean up for the solver
+    reset();
 }
 
 void Maze::reset() {
-    for (auto& cell : cells) {
-        cell.visited = false;
-        cell.g_cost = std::numeric_limits<double>::max();
-        cell.h_cost = 0.0;
-        cell.parent = nullptr;
+    for (auto& c : cells) {
+        c.visited = false;
+        c.g_cost = std::numeric_limits<double>::max();
+        c.h_cost = 0.0;
+        c.parent = nullptr;
     }
 }
 
@@ -110,19 +94,17 @@ Cell* Maze::getCellPtr(int x, int y) {
 Cell* Maze::getStart() { return getCellPtr(1, 1); }
 Cell* Maze::getGoal() { return getCellPtr(width - 2, height - 2); }
 
-std::vector<Cell*> Maze::getNeighbors(Cell* cell) {
-    std::vector<Cell*> neighbors;
-    if (!cell) return neighbors;
-    const int dx[] = {1, 0, -1, 0};
-    const int dy[] = {0, 1, 0, -1};
-    for (int i = 0; i < 4; ++i) {
-        int newX = cell->x + dx[i];
-        int newY = cell->y + dy[i];
-        Cell* neighbor = getCellPtr(newX, newY);
-        if (neighbor && !neighbor->wall) neighbors.push_back(neighbor);
+std::vector<Cell*> Maze::getNeighbors(Cell* c) {
+    std::vector<Cell*> n;
+    if (!c) return n;
+    const int dx[] = {0, 0, 1, -1};
+    const int dy[] = {1, -1, 0, 0};
+    for (int i=0; i<4; ++i) {
+        Cell* adj = getCellPtr(c->x + dx[i], c->y + dy[i]);
+        if (adj && !adj->wall) n.push_back(adj);
     }
-    return neighbors;
+    return n;
 }
 
 std::string Maze::toAscii() const { return ""; }
-void Maze::markPath(const std::vector<Cell*>& path) {}
+void Maze::markPath(const std::vector<Cell*>&) {}
