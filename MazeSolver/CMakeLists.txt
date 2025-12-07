@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "C:/Qt/6.9.3/mingw_64")
 
 # Find Qt6 components
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
 
 # Set MinGW specific settings
 if(MINGW)
@@ -16,9 +16,9 @@ if(MINGW)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 endif()
 
-# ========== TERMINAL VERSION ==========
-set(TERMINAL_SRC_FILES
-    main.cpp
+# ========== SHARED SOURCE FILES ==========
+# These files are used by BOTH the Terminal and GUI versions
+set(CORE_SOURCES
     core/Maze.cpp
     core/Utility.cpp
     algorithms/Dijkstra.cpp
@@ -27,9 +27,13 @@ set(TERMINAL_SRC_FILES
     algorithms/JumpPointSearch.cpp
 )
 
-add_executable(MazeSolver ${TERMINAL_SRC_FILES})
+# ========== TERMINAL VERSION ==========
+add_executable(MazeSolver 
+    main.cpp 
+    ${CORE_SOURCES}
+)
 
-# Force console application on Windows
+# Force console application on Windows for Terminal version
 if(WIN32)
     target_link_options(MazeSolver PRIVATE -mconsole)
 endif()
@@ -44,6 +48,7 @@ if(Qt6_FOUND)
         gui/MainWindow.cpp
         gui/MazeWidget.cpp
         gui/ControlPanel.cpp
+        ${CORE_SOURCES}
     )
 
     set(GUI_HEADERS
@@ -52,8 +57,9 @@ if(Qt6_FOUND)
         gui/ControlPanel.h
     )
 
-    # Method 1: Use AUTOMOC property (modern approach)
     add_executable(MazeSolverGUI ${GUI_SOURCES})
+    
+    # Modern Qt Automoc handling
     set_target_properties(MazeSolverGUI PROPERTIES
         AUTOMOC ON
     )
@@ -75,8 +81,9 @@ if(Qt6_FOUND)
     if(WIN32)
         find_program(WINDEPLOYQT windeployqt HINTS ${QT_DIR}/bin)
         if(WINDEPLOYQT)
+            # FIX: Removed '--verbose' to prevent argument parsing error
             add_custom_command(TARGET MazeSolverGUI POST_BUILD
-                COMMAND ${WINDEPLOYQT} --verbose --compiler-runtime "$<TARGET_FILE:MazeSolverGUI>"
+                COMMAND ${WINDEPLOYQT} --compiler-runtime "$<TARGET_FILE:MazeSolverGUI>"
                 COMMENT "Deploying Qt dependencies..."
             )
         endif()

@@ -244,9 +244,16 @@ void ControlPanel::updateResults(const AlgorithmResult& results)
 {
     if (results.success) {
         statusLabel_->setText("Status: Solved");
-        pathLengthLabel_->setText(QString("Path Length: %1").arg(results.pathLength));
-        nodesExploredLabel_->setText(QString("Nodes Explored: %1").arg(results.nodesExplored));
-        timeTakenLabel_->setText(QString("Time Taken: %1 ms").arg(results.timeTakenMs));
+        // [FIX] Use .metrics. to access the data correctly
+        pathLengthLabel_->setText(QString("Path Length: %1").arg(results.metrics.pathLength));
+        nodesExploredLabel_->setText(QString("Nodes Explored: %1").arg(results.metrics.nodesExplored));
+        
+        double timeVal = results.metrics.timeTakenMs;
+        if (timeVal < 1000) {
+             timeTakenLabel_->setText(QString("Time Taken: %1 us").arg(timeVal));
+        } else {
+             timeTakenLabel_->setText(QString("Time Taken: %1 ms").arg(timeVal / 1000.0, 0, 'f', 2));
+        }
     } else {
         statusLabel_->setText("Status: No Solution Found");
         pathLengthLabel_->setText("Path Length: --");

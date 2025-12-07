@@ -16,7 +16,7 @@ AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> st
     AlgorithmResult result;
     RobustTimer timer;
     
-    // Setup (exclude from timing)
+    // Setup
     maze.reset();
     Cell* start = maze.getStart();
     Cell* goal = maze.getGoal();
@@ -32,8 +32,7 @@ AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> st
     start->g_cost = 0.0;
     openSet.push(start);
     
-    // START TIMING - Pure algorithm only
-    timer.start(2000); // 2 second timeout
+    timer.start(2000); 
     
     while (!openSet.empty() && !timer.isTimeout()) {
         Cell* current = openSet.top();
@@ -44,6 +43,11 @@ AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> st
         
         closedSet[currentIndex] = true;
         result.visitedOrder.push_back(current);
+        
+        // [ANIMATION FIX]: Tell UI we are visiting this node
+        if (stepCallback) {
+            stepCallback(current, nullptr);
+        }
         
         if (current == goal) {
             result.success = true;
@@ -60,18 +64,21 @@ AlgorithmResult Dijkstra::solve(Maze& maze, std::function<void(Cell*, Cell*)> st
                 neighbor->g_cost = new_g_cost;
                 neighbor->parent = current;
                 openSet.push(neighbor);
+
+                // [ANIMATION FIX]: Tell UI we found a neighbor (frontier)
+                if (stepCallback) {
+                    stepCallback(nullptr, neighbor);
+                }
             }
         }
     }
     
-    // STOP TIMING before path reconstruction
     result.metrics.timeTakenMs = timer.stop();
     
     if (timer.isTimeout()) {
         result.success = false;
     }
     
-    // Path reconstruction (exclude from timing)
     if (result.success) {
         result.path = Utility::reconstructPath(maze.getGoal());
         result.metrics.pathLength = result.path.size();

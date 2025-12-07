@@ -116,10 +116,11 @@ void solveWithAlgorithm(Maze& maze, int choice) {
 void solveAllAlgorithms(Maze& maze) {
     std::cout << "\n🧪 Running All Algorithms for Comparison...\n";
     
-    AlgorithmResult dijkstra = Utility::runAlgorithmSafely(maze, Dijkstra::solve);
-    AlgorithmResult astar = Utility::runAlgorithmSafely(maze, AStar::solve);
-    AlgorithmResult doubleAstar = Utility::runAlgorithmSafely(maze, DoubleAStar::solve);
-    AlgorithmResult jps = Utility::runAlgorithmSafely(maze, JumpPointSearch::solve);
+    // UPDATED: Wrapped in lambdas to handle the stepCallback parameter mismatch
+    AlgorithmResult dijkstra = Utility::runAlgorithmSafely(maze, [](Maze& m){ return Dijkstra::solve(m); });
+    AlgorithmResult astar = Utility::runAlgorithmSafely(maze, [](Maze& m){ return AStar::solve(m); });
+    AlgorithmResult doubleAstar = Utility::runAlgorithmSafely(maze, [](Maze& m){ return DoubleAStar::solve(m); });
+    AlgorithmResult jps = Utility::runAlgorithmSafely(maze, [](Maze& m){ return JumpPointSearch::solve(m); });
     
     // Display individual results
     printMetrics("Dijkstra", dijkstra);
@@ -178,10 +179,11 @@ void solveAllAlgorithms(Maze& maze) {
 void runRobustAnalysis(Maze& maze) {
     std::cout << "\n🔬 Running Robust Analysis (3 runs per algorithm)...\n";
     
-    RobustMetrics dijkstraMetrics = Utility::runAlgorithmMultipleTimes(maze, Dijkstra::solve, 3);
-    RobustMetrics astarMetrics = Utility::runAlgorithmMultipleTimes(maze, AStar::solve, 3);
-    RobustMetrics doubleAstarMetrics = Utility::runAlgorithmMultipleTimes(maze, DoubleAStar::solve, 3);
-    RobustMetrics jpsMetrics = Utility::runAlgorithmMultipleTimes(maze, JumpPointSearch::solve, 3);
+    // UPDATED: Wrapped in lambdas here as well
+    RobustMetrics dijkstraMetrics = Utility::runAlgorithmMultipleTimes(maze, [](Maze& m){ return Dijkstra::solve(m); }, 3);
+    RobustMetrics astarMetrics = Utility::runAlgorithmMultipleTimes(maze, [](Maze& m){ return AStar::solve(m); }, 3);
+    RobustMetrics doubleAstarMetrics = Utility::runAlgorithmMultipleTimes(maze, [](Maze& m){ return DoubleAStar::solve(m); }, 3);
+    RobustMetrics jpsMetrics = Utility::runAlgorithmMultipleTimes(maze, [](Maze& m){ return JumpPointSearch::solve(m); }, 3);
     
     printRobustMetrics("Dijkstra", dijkstraMetrics);
     printRobustMetrics("A*", astarMetrics);

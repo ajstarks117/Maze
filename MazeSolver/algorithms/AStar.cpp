@@ -16,7 +16,6 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
     AlgorithmResult result;
     RobustTimer timer;
     
-    // Setup (exclude from timing)
     maze.reset();
     Cell* start = maze.getStart();
     Cell* goal = maze.getGoal();
@@ -28,13 +27,11 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
     std::priority_queue<Cell*, std::vector<Cell*>, AStarCompare> openSet;
     std::vector<bool> closedSet(maze.getWidth() * maze.getHeight(), false);
     
-    // Initialize start node
     start->g_cost = 0.0;
     start->h_cost = Utility::manhattanDistance(start, goal);
     openSet.push(start);
     
-    // START TIMING - Pure algorithm only
-    timer.start(2000); // 2 second timeout
+    timer.start(2000); 
     
     while (!openSet.empty() && !timer.isTimeout()) {
         Cell* current = openSet.top();
@@ -45,6 +42,11 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
         
         closedSet[currentIndex] = true;
         result.visitedOrder.push_back(current);
+
+        // [ANIMATION FIX]: Visit node
+        if (stepCallback) {
+            stepCallback(current, nullptr);
+        }
         
         if (current == goal) {
             result.success = true;
@@ -62,18 +64,21 @@ AlgorithmResult AStar::solve(Maze& maze, std::function<void(Cell*, Cell*)> stepC
                 neighbor->h_cost = Utility::manhattanDistance(neighbor, goal);
                 neighbor->parent = current;
                 openSet.push(neighbor);
+
+                // [ANIMATION FIX]: Add to frontier
+                if (stepCallback) {
+                    stepCallback(nullptr, neighbor);
+                }
             }
         }
     }
     
-    // STOP TIMING before path reconstruction
     result.metrics.timeTakenMs = timer.stop();
     
     if (timer.isTimeout()) {
         result.success = false;
     }
     
-    // Path reconstruction (exclude from timing)
     if (result.success) {
         result.path = Utility::reconstructPath(maze.getGoal());
         result.metrics.pathLength = result.path.size();
