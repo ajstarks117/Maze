@@ -18,7 +18,7 @@ Jump Point Search - Optimized A* for uniform-cost grids
 🏗️ Maze Generation
 Recursive Backtracking - Perfect maze generation
 
-Customizable Sizes - 5x5 to 101x101 mazes
+Customizable Sizes - 5x5 to 101x101 mazes.
 
 Guaranteed Solvability - Always generates solvable mazes
 
