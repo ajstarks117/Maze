@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QSplitter>
+#include <QTextBrowser> // [CHANGE] Use QTextBrowser instead of QTextEdit
 #include "MazeWidget.h"
 #include "ControlPanel.h"
 
@@ -15,8 +16,10 @@ private:
     void setupUI();
     void setupConnections();
 
-    QSplitter* splitter_;      // Split view (Maze | Controls)
-    MazeWidget* mazeWidget_;   // Left side (maze visualizer)
-    ControlPanel* controlPanel_; // Right side (controls)
+    QSplitter* splitter_;
+    MazeWidget* mazeWidget_;
+    ControlPanel* controlPanel_;
+    
+    // [CHANGE] The display area is now a browser
+    QTextBrowser* insightDisplay_;
 };
-

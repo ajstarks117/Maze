@@ -3,19 +3,17 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QSplitter>
+#include <QScrollArea>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setWindowTitle("Maze Solver Visualizer");
-    setMinimumSize(1200, 800);
+    setMinimumSize(1100, 750); 
 
     setupUI();
     setupConnections();
 }
 
 void MainWindow::setupUI() {
-    // -------------------------
-    // CENTRAL WIDGET
-    // -------------------------
     QWidget* centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
 
@@ -23,42 +21,66 @@ void MainWindow::setupUI() {
     mainLayout->setContentsMargins(16, 16, 16, 16);
     mainLayout->setSpacing(16);
 
-    // -------------------------
-    // SPLITTER (Maze | Control Panel)
-    // -------------------------
     splitter_ = new QSplitter(Qt::Horizontal, centralWidget);
 
-    // -------------------------
-    // MAZE CONTAINER (White Card)
-    // -------------------------
-    QWidget* mazeContainer = new QWidget(splitter_);
-    mazeContainer->setObjectName("mazeContainer");  // QSS styling
+    // ===============================================
+    // LEFT SIDE: Maze (Top) + Insights (Bottom)
+    // ===============================================
+    QWidget* leftContainer = new QWidget(splitter_);
+    leftContainer->setObjectName("mazeContainer");
+    
+    QVBoxLayout* leftLayout = new QVBoxLayout(leftContainer);
+    leftLayout->setContentsMargins(0, 0, 0, 0);
+    leftLayout->setSpacing(0); 
 
-    QVBoxLayout* mazeLayout = new QVBoxLayout(mazeContainer);
-    mazeLayout->setContentsMargins(20, 20, 20, 20);
-    mazeLayout->setSpacing(0);
-
-    // MazeWidget inside container
-    mazeWidget_ = new MazeWidget(mazeContainer);
+    // 1. Maze Widget
+    mazeWidget_ = new MazeWidget(leftContainer);
     mazeWidget_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    
+    // 2. Insight Display (Bottom Panel)
+    // [CHANGE] Using QTextBrowser here
+    insightDisplay_ = new QTextBrowser(leftContainer);
+    insightDisplay_->setReadOnly(true);
+    insightDisplay_->setFixedHeight(180);
+    insightDisplay_->setPlaceholderText("Solve the maze to see algorithm insights here...");
+    
+    // [WORKS NOW] This function exists in QTextBrowser
+    insightDisplay_->setOpenExternalLinks(true); 
+    
+    insightDisplay_->setStyleSheet(R"(
+        QTextBrowser {
+            background-color: #ffffff;
+            color: #333;
+            border: none;
+            border-top: 1px solid #e0e0e0; 
+            padding: 16px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+        }
+    )");
 
-    mazeLayout->addWidget(mazeWidget_);
+    leftLayout->addWidget(mazeWidget_);
+    leftLayout->addWidget(insightDisplay_);
 
-    splitter_->addWidget(mazeContainer);
+    splitter_->addWidget(leftContainer);
 
-    // -------------------------
-    // CONTROL PANEL
-    // -------------------------
-    controlPanel_ = new ControlPanel(splitter_);
-    controlPanel_->setObjectName("controlPanel");
+    // ===============================================
+    // RIGHT SIDE: Control Panel
+    // ===============================================
+    QScrollArea* scrollArea = new QScrollArea(splitter_);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setStyleSheet("QScrollArea { background: transparent; }");
 
-    splitter_->addWidget(controlPanel_);
+    controlPanel_ = new ControlPanel(scrollArea);
+    scrollArea->setWidget(controlPanel_);
 
-    // Layout stretch: 70% maze, 30% controls
-    splitter_->setStretchFactor(0, 7);
-    splitter_->setStretchFactor(1, 3);
+    splitter_->addWidget(scrollArea);
 
-    // Add splitter to main layout
+    splitter_->setStretchFactor(0, 75); 
+    splitter_->setStretchFactor(1, 25); 
+
     mainLayout->addWidget(splitter_);
 }
 
@@ -66,7 +88,12 @@ void MainWindow::setupConnections() {
     connect(controlPanel_, &ControlPanel::mazeGenerated, mazeWidget_, &MazeWidget::resetView);
     connect(controlPanel_, &ControlPanel::resetRequested, mazeWidget_, &MazeWidget::resetView);
 
-    // [FIX] Use Singleton for signals
+    // [CHANGE] Connect to setText since QTextBrowser doesn't have a direct setHtml slot that matches exactly,
+    // but setHtml is available as a public slot in base class, however sometimes explicit cast helps.
+    // Actually, QTextBrowser inherits setHtml from QTextEdit, so this works fine:
+    connect(controlPanel_, &ControlPanel::explanationUpdated, 
+            insightDisplay_, &QTextBrowser::setHtml);
+
     BackendInterface::get().onAnimationFrame = [this](const AnimationFrame& frame) {
         mazeWidget_->updateAnimationFrame(frame);
     };

@@ -13,13 +13,6 @@
 
 #include "BackendInterface.h"
 
-/*
- * ControlPanel:
- * - All UI controls for generating mazes, selecting algorithms,
- *   changing speed, starting/stopping the solver, and showing results.
- * - This header is fully cleaned & ready for modern UI styling (QSS).
- */
-
 class ControlPanel : public QWidget {
     Q_OBJECT
 
@@ -31,6 +24,9 @@ signals:
     void solveStarted();
     void resetRequested();
     void stepRequested();
+    
+    // [NEW] Signal to send the explanation text to the MainWindow
+    void explanationUpdated(const QString& htmlContent);
 
 private slots:
     void onGenerateClicked();
@@ -41,44 +37,35 @@ private slots:
     void updateResults(const AlgorithmResult& results);
 
 private:
-    // Setup helpers
     void setupMazeControls(QVBoxLayout* mainLayout);
     void setupAlgorithmControls(QVBoxLayout* mainLayout);
     void setupSimulationControls(QVBoxLayout* mainLayout);
     void setupResultsPanel(QVBoxLayout* mainLayout);
 
 private:
-    // ==========
     // Maze Setup
-    // ==========
     QSpinBox* widthSpin_;
     QSpinBox* heightSpin_;
     QComboBox* generatorCombo_;
     QPushButton* generateButton_;
 
-    // =================
     // Algorithm Options
-    // =================
     QButtonGroup* algorithmGroup_;
     QRadioButton* dijkstraRadio_;
     QRadioButton* astarRadio_;
     QRadioButton* bidirectionalRadio_;
     QRadioButton* jpsRadio_;
 
-    // ====================
     // Simulation Controls
-    // ====================
     QPushButton* solveButton_;
     QPushButton* resetButton_;
     QPushButton* stepButton_;
     QSlider* speedSlider_;
 
-    // ============
     // Results Panel
-    // ============
     QLabel* statusLabel_;
     QLabel* pathLengthLabel_;
     QLabel* nodesExploredLabel_;
     QLabel* timeTakenLabel_;
+    
 };
-

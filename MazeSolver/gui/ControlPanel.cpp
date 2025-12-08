@@ -9,18 +9,16 @@ ControlPanel::ControlPanel(QWidget* parent)
 {
     setObjectName("controlPanel");
 
-    // Main vertical layout for all group boxes
     auto* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(8, 8, 8, 8);
     mainLayout->setSpacing(18);
 
-    // Setup UI sections
     setupMazeControls(mainLayout);
     setupAlgorithmControls(mainLayout);
     setupSimulationControls(mainLayout);
     setupResultsPanel(mainLayout);
 
-    mainLayout->addStretch(); // Push groups to top
+    mainLayout->addStretch(); 
 
     // Backend → Results UI updates
     BackendInterface::get().onSolveComplete = [this](const AlgorithmResult& results) {
@@ -28,18 +26,12 @@ ControlPanel::ControlPanel(QWidget* parent)
     };
 }
 
-//
-// ========================
-//  Maze Setup Controls
-// ========================
-//
 void ControlPanel::setupMazeControls(QVBoxLayout* mainLayout)
 {
     auto* group = new QGroupBox("Maze Setup");
     auto* layout = new QVBoxLayout(group);
     layout->setSpacing(10);
 
-    // Size selection (width / height)
     auto* sizeLayout = new QHBoxLayout();
     sizeLayout->setSpacing(10);
 
@@ -56,10 +48,9 @@ void ControlPanel::setupMazeControls(QVBoxLayout* mainLayout)
     sizeLayout->addWidget(new QLabel("Height:"));
     sizeLayout->addWidget(heightSpin_);
 
-    // Maze generator dropdown
     generatorCombo_ = new QComboBox();
     generatorCombo_->addItem("Recursive Backtracker");
-    generatorCombo_->addItem("Prim's Algorithm");
+    generatorCombo_->addItem("Prim's Algorithm"); 
     generatorCombo_->addItem("Kruskal's Algorithm");
     generatorCombo_->addItem("DFS Randomized");
 
@@ -70,18 +61,12 @@ void ControlPanel::setupMazeControls(QVBoxLayout* mainLayout)
     layout->addWidget(generatorCombo_);
     layout->addWidget(generateButton_);
 
-    // Signal
     connect(generateButton_, &QPushButton::clicked,
             this, &ControlPanel::onGenerateClicked);
 
     mainLayout->addWidget(group);
 }
 
-//
-// ========================
-//  Algorithm Selection
-// ========================
-//
 void ControlPanel::setupAlgorithmControls(QVBoxLayout* mainLayout)
 {
     auto* group = new QGroupBox("Pathfinding Algorithm");
@@ -100,7 +85,7 @@ void ControlPanel::setupAlgorithmControls(QVBoxLayout* mainLayout)
     algorithmGroup_->addButton(bidirectionalRadio_, 2);
     algorithmGroup_->addButton(jpsRadio_, 3);
 
-    astarRadio_->setChecked(true); // Default
+    astarRadio_->setChecked(true);
 
     layout->addWidget(dijkstraRadio_);
     layout->addWidget(astarRadio_);
@@ -110,11 +95,6 @@ void ControlPanel::setupAlgorithmControls(QVBoxLayout* mainLayout)
     mainLayout->addWidget(group);
 }
 
-//
-// ========================
-//  Simulation Controls
-// ========================
-//
 void ControlPanel::setupSimulationControls(QVBoxLayout* mainLayout)
 {
     auto* group = new QGroupBox("Simulation Controls");
@@ -123,7 +103,7 @@ void ControlPanel::setupSimulationControls(QVBoxLayout* mainLayout)
 
     solveButton_ = new QPushButton("Start Solve");
     resetButton_ = new QPushButton("Reset");
-    resetButton_->setObjectName("resetButton"); // QSS: Gray button
+    resetButton_->setObjectName("resetButton"); 
     stepButton_ = new QPushButton("Step Forward");
 
     auto* buttonRow = new QHBoxLayout();
@@ -131,7 +111,6 @@ void ControlPanel::setupSimulationControls(QVBoxLayout* mainLayout)
     buttonRow->addWidget(solveButton_);
     buttonRow->addWidget(resetButton_);
 
-    // Speed slider
     auto* speedLayout = new QHBoxLayout();
     speedLayout->setSpacing(8);
     speedLayout->addWidget(new QLabel("Speed:"));
@@ -146,7 +125,6 @@ void ControlPanel::setupSimulationControls(QVBoxLayout* mainLayout)
     layout->addWidget(stepButton_);
     layout->addLayout(speedLayout);
 
-    // Signals
     connect(solveButton_, &QPushButton::clicked,
             this, &ControlPanel::onSolveClicked);
 
@@ -162,11 +140,6 @@ void ControlPanel::setupSimulationControls(QVBoxLayout* mainLayout)
     mainLayout->addWidget(group);
 }
 
-//
-// ========================
-//  Results Panel
-// ========================
-//
 void ControlPanel::setupResultsPanel(QVBoxLayout* mainLayout)
 {
     auto* group = new QGroupBox("Results");
@@ -186,20 +159,11 @@ void ControlPanel::setupResultsPanel(QVBoxLayout* mainLayout)
     mainLayout->addWidget(group);
 }
 
-//
-// ========================
-//  Slots Implementation
-// ========================
-//
-
 void ControlPanel::onGenerateClicked() {
     int width = widthSpin_->value();
     int height = heightSpin_->value();
     MazeGenerator gen = static_cast<MazeGenerator>(generatorCombo_->currentIndex());
-
-    // [FIX] Use Singleton
     BackendInterface::get().generateMaze(width, height, gen);
-
     emit mazeGenerated();
     statusLabel_->setText("Status: Maze Generated");
 }
@@ -207,39 +171,33 @@ void ControlPanel::onGenerateClicked() {
 void ControlPanel::onSolveClicked() {
     PathfindingAlgorithm algorithm = static_cast<PathfindingAlgorithm>(algorithmGroup_->checkedId());
     int speed = speedSlider_->value();
-
-    // [FIX] Use Singleton
     BackendInterface::get().startSolve(algorithm, speed);
-
     emit solveStarted();
     statusLabel_->setText("Status: Solving...");
 }
 
-void ControlPanel::onResetClicked() {
-    // [FIX] Use Singleton
-    BackendInterface::get().reset();
-    emit resetRequested();
-    statusLabel_->setText("Status: Reset");
-    updateResults(AlgorithmResult());
-}
-
-void ControlPanel::onStepClicked()
-{
+void ControlPanel::onStepClicked() {
     BackendInterface::get().step();
     emit stepRequested();
 }
 
-void ControlPanel::onSpeedChanged(int value)
-{
+void ControlPanel::onSpeedChanged(int value) {
     Q_UNUSED(value);
-    // Can be used if real-time speed adjustments are required
 }
 
+void ControlPanel::onResetClicked() {
+    BackendInterface::get().reset();
+    emit resetRequested();
+    statusLabel_->setText("Status: Reset");
+    updateResults(AlgorithmResult());
+    emit explanationUpdated(""); 
+}
+
+// [UPDATED] Adds "Learn More" links to the HTML
 void ControlPanel::updateResults(const AlgorithmResult& results)
 {
     if (results.success) {
         statusLabel_->setText("Status: Solved");
-        // [FIX] Use .metrics. to access the data correctly
         pathLengthLabel_->setText(QString("Path Length: %1").arg(results.metrics.pathLength));
         nodesExploredLabel_->setText(QString("Nodes Explored: %1").arg(results.metrics.nodesExplored));
         
@@ -249,10 +207,59 @@ void ControlPanel::updateResults(const AlgorithmResult& results)
         } else {
              timeTakenLabel_->setText(QString("Time Taken: %1 ms").arg(timeVal / 1000.0, 0, 'f', 2));
         }
+
+        int selectedId = algorithmGroup_->checkedId();
+        QString explanation;
+
+        // Common style for the link
+        QString linkStyle = "color: #007bff; text-decoration: none; font-weight: bold;";
+
+        switch (selectedId) {
+            case 0: // Dijkstra
+                explanation = 
+                    "<h3 style='color:#2c3e50; margin-top:0;'>Dijkstra's Algorithm</h3>"
+                    "<p><b>Mechanism:</b> Dijkstra explores nodes in concentric circles, expanding equally in all directions. "
+                    "It guarantees the shortest path by always selecting the unvisited node with the smallest known distance.</p>"
+                    "<p><b>Cons:</b> Wasteful in grid-based maps because it acts like a 'flood fill'.</p>"
+                    "<p>🔗 <a style='" + linkStyle + "' href='https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/'>Read more on GeeksforGeeks</a></p>";
+                break;
+            case 1: // A*
+                explanation = 
+                    "<h3 style='color:#2c3e50; margin-top:0;'>A* Search Algorithm</h3>"
+                    "<p><b>Mechanism:</b> A* improves on Dijkstra by using a <i>heuristic</i>. "
+                    "It selects paths based on <b>f(n) = g(n) + h(n)</b>, where h(n) is the estimated distance to the goal.</p>"
+                    "<p><b>Result:</b> This makes the search 'greedy', pulling the frontier towards the goal.</p>"
+                    "<p>🔗 <a style='" + linkStyle + "' href='https://www.geeksforgeeks.org/a-search-algorithm/'>Read more on GeeksforGeeks</a></p>";
+                break;
+            case 2: // Bidirectional
+                explanation = 
+                    "<h3 style='color:#2c3e50; margin-top:0;'>Bidirectional A*</h3>"
+                    "<p><b>Mechanism:</b> Two searches run simultaneously: one forward from Start and one backward from Goal. "
+                    "They meet in the middle.</p>"
+                    "<p><b>Why:</b> Searching two small circles (πr²/2) is faster than searching one large circle (πr²).</p>"
+                    "<p>🔗 <a style='" + linkStyle + "' href='https://www.geeksforgeeks.org/bidirectional-search/'>Read more on GeeksforGeeks</a></p>";
+                break;
+            case 3: // JPS
+                explanation = 
+                    "<h3 style='color:#2c3e50; margin-top:0;'>Jump Point Search (JPS)</h3>"
+                    "<p><b>Mechanism:</b> JPS is optimized for grids. It 'jumps' over empty spaces along straight lines "
+                    "and only stops at interesting intersections (jump points).</p>"
+                    "<p><b>Benefit:</b> It skips redundant checks, making it incredibly fast for open maps.</p>"
+                    "<p>🔗 <a style='" + linkStyle + "' href='https://zerowidth.com/2013/a-visual-explanation-of-jump-point-search/'>Read more on Web</a></p>";
+                break;
+            default:
+                explanation = "";
+                break;
+        }
+        
+        emit explanationUpdated(explanation);
+
     } else {
         statusLabel_->setText("Status: No Solution Found");
         pathLengthLabel_->setText("Path Length: --");
         nodesExploredLabel_->setText("Nodes Explored: --");
         timeTakenLabel_->setText("Time Taken: --");
+        
+        emit explanationUpdated("<p style='color:red;'><b>No Path Found:</b> The goal is unreachable.</p>");
     }
 }
